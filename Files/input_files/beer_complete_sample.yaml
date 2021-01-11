@@ -1,0 +1,11 @@
+experiment_name: 'complete_sample'
+data_name: 'beer_data'
+N: 5
+L: [3, 10]
+training_iterations: 1
+batch_size: 1
+criterion: ['MSELoss', 'Hinge']
+lr: 0.01
+weight_decay: 1e-5
+optimizer: ['SGD', 'Adam']
+epochs: 10
