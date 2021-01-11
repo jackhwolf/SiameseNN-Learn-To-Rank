@@ -38,9 +38,9 @@ class DaskDeployer:
         worker_pane = None
         for nw in range(self.n_workers):
             if nw == 0:
-                worker_pane = workers.attached_pane
+                worker_pane = workers[nw//4].attached_pane
             else:
-                worker_pane = workers.split_window(vertical=False, attach=False)
+                worker_pane = workers[nw//4].split_window(vertical=False, attach=False)
             worker_pane.send_keys(self.worker_command)
         script.attached_pane.send_keys(self.script_command)
         workers.select_layout('tiled')
@@ -50,7 +50,11 @@ class DaskDeployer:
         session = self.server.new_session(self.session_name, kill_session=True)
         scheduler = session.attached_window
         scheduler.rename_window('scheduler')
-        workers = session.new_window('workers', attach=False)
+        worker_windows = (self.n_workers // 4) + 1
+        workers = []
+        for i in range(worker_windows):
+            worker = session.new_window(f'workers{i}', attach=False)
+            workers.append(worker)
         script = session.new_window('script', attach=False)
         return (scheduler, workers, script)
 
