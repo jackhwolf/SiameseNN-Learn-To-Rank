@@ -4,8 +4,8 @@ N: 50
 L: [10, 100]
 training_iterations: 1
 batch_size: 1
-criterion: ['MSELoss', 'Hinge']
-lr: 0.01
-weight_decay: 1e-5
-optimizer: ['SGD', 'Adam']
+criterion: 'MSELoss'
+lr: [0.01, 0.001]
+weight_decay: [1e-2, 1e-3, 1e-5]
+optimizer: 'SGD'
 epochs: 2500
