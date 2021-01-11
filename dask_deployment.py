@@ -26,7 +26,7 @@ class DaskDeployer:
         self.n_workers = int(n_workers)
         self.hostname = socket.gethostname()
         self.addr = dask_addr_map[self.hostname]
-        assert self.n_workers > 1 and self.n_workers < 8
+        assert self.n_workers > 1, "need at least 1 worker"
         self.session_name = 'beerspace-experiments'
         self.server = libtmux.Server()
 
