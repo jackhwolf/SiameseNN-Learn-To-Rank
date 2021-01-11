@@ -1,4 +1,4 @@
-experiment_name: 'beer-jan10-sample'
+experiment_name: 'beer-jan10'
 data_name: 'beer_data'
 N: 50
 L: [10, 100]
@@ -8,4 +8,4 @@ criterion: ['MSELoss', 'Hinge']
 lr: 0.01
 weight_decay: 1e-5
 optimizer: ['SGD', 'Adam']
-epochs: 1
+epochs: 2500
