@@ -43,7 +43,8 @@ class DaskDeployer:
                 worker_pane = workers[nw//4].split_window(vertical=False, attach=False)
             worker_pane.send_keys(self.worker_command)
         script.attached_pane.send_keys(self.script_command)
-        workers.select_layout('tiled')
+        for i, _ in enumerate(workers):
+            workers[i].select_layout('tiled')
         os.system('tmux kill-session -t blank')
 
     def make_windows(self):
