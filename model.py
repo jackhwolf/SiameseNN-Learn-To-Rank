@@ -44,6 +44,7 @@ class RankLearner:
             loss.backward()
             self.optimizer.step()
             self.optimizer.zero_grad()
+        print(loss.item())
         return loss.item()
 
     # perform two forward passes and return prediction
