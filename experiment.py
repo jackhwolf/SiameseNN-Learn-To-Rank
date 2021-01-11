@@ -48,6 +48,9 @@ manage running a single experiment given parameters
 class Experiment:
 
     def __init__(self, parameters):
+        for k in parameters:
+            if parameters[k] == 'None':
+                parameters[k] = None
         self.params_ = parameters
         self.data = getdata(**parameters)
         if not parameters.get('D'):

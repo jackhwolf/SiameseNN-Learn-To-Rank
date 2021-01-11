@@ -1,7 +1,7 @@
 experiment_name: 'complete_sample'
 data_name: 'beer_data'
 N: 5
-L: [3, 10]
+L: [None, 3, 10]
 training_iterations: 1
 batch_size: 1
 criterion: ['MSELoss', 'Hinge']

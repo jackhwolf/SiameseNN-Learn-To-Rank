@@ -15,7 +15,7 @@ class RankLearner:
                             weight_decay=1e-5, optimizer='SGD', \
                             epochs=1000, clip_grad=1, **kw):
         self.D = D
-        self.L = L
+        self.L = L if L is None else int(L)
         self.criterion_t = criterion
         self.optimizer_t = optimizer
         self.x_hat = self.to_var(np.random.uniform(-1, 1, (1,D)), True)
