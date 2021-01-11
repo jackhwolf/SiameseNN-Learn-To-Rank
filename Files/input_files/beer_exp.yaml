@@ -1,0 +1,11 @@
+experiment_name: 'beer-jan10-sample'
+data_name: 'beer_data'
+N: 50
+L: [None, 10, 100]
+training_iterations: 1
+batch_size: 1
+criterion: ['MSELoss', 'Hinge']
+lr: 0.01
+weight_decay: 1e-5
+optimizer: 'SGD', 'Adam'
+epochs: 1
