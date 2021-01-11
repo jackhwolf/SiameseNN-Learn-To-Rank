@@ -9,3 +9,4 @@ lr: 0.01
 weight_decay: 1e-5
 optimizer: ['SGD', 'Adam']
 epochs: 10
+clip_grad: 1

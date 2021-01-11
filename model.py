@@ -13,7 +13,7 @@ class RankLearner:
 
     def __init__(self, D=2, L=None, criterion='MSELoss', lr=0.01, \
                             weight_decay=1e-5, optimizer='SGD', \
-                            epochs=1000, **kw):
+                            epochs=1000, clip_grad=1, **kw):
         self.D = D
         self.L = L
         self.criterion_t = criterion
@@ -33,6 +33,8 @@ class RankLearner:
             params.append(self.l_hat)
         self.optimizer = opt(params, lr=self.lr, weight_decay=self.weight_decay)
         self.epochs = epochs
+        self.clip_grad = clip_grad
+        torch.nn.utils.clip_grad_norm_(params, self.clip_grad)
         self.const_inp_x = torch.FloatTensor([1])
         self.const_inp_l = None if self.L is None else torch.FloatTensor(np.identity(self.D))
 
