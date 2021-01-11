@@ -7,5 +7,5 @@ batch_size: 1
 criterion: ['MSELoss', 'Hinge']
 lr: 0.01
 weight_decay: 1e-5
-optimizer: 'SGD', 'Adam'
+optimizer: ['SGD', 'Adam']
 epochs: 1
