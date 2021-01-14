@@ -21,7 +21,7 @@ this involves three tmux windows, one for each
 '''
 class DaskDeployer:
 
-    def __init__(self, input_filename, n_workers):
+    def __init__(self, input_filename, n_workers, cloud=False):
         self.input_filename = input_filename
         self.n_workers = int(n_workers)
         self.hostname = socket.gethostname()
@@ -29,25 +29,26 @@ class DaskDeployer:
         assert self.n_workers > 1, "need at least 1 worker"
         self.session_name = 'beerspace-experiments'
         self.server = libtmux.Server()
+        self.cloud = cloud
 
     # turn on scheduler, make workers, submit script
     def __call__(self):
         os.system('tmux new -s blank -d')
-        scheduler, workers, script = self.make_windows()
-        scheduler.attached_pane.send_keys(self.scheduler_command)
+        scheduler, workers, script = self._make_windows()
+        scheduler.attached_pane.send_keys(self._scheduler_command)
         worker_pane = None
         for nw in range(self.n_workers):
             if nw == 0:
                 worker_pane = workers[nw//4].attached_pane
             else:
                 worker_pane = workers[nw//4].split_window(vertical=False, attach=False)
-            worker_pane.send_keys(self.worker_command)
-        script.attached_pane.send_keys(self.script_command)
+            worker_pane.send_keys(self._worker_command)
+        script.attached_pane.send_keys(self._script_command)
         for i, _ in enumerate(workers):
             workers[i].select_layout('tiled')
         os.system('tmux kill-session -t blank')
 
-    def make_windows(self):
+    def _make_windows(self):
         session = self.server.new_session(self.session_name, kill_session=True)
         scheduler = session.attached_window
         scheduler.rename_window('scheduler')
@@ -60,18 +61,20 @@ class DaskDeployer:
         return (scheduler, workers, script)
 
     @property
-    def scheduler_command(self):
+    def _scheduler_command(self):
         return f'{venv_cmd}; dask-scheduler'
 
     @property
-    def worker_command(self):
+    def _worker_command(self):
         return f'{venv_cmd}; export OMP_NUM_THREADS=3; dask-worker {self.addr}'
 
     @property
-    def script_command(self):
-        return f'{venv_cmd}; python3 experiment.py {self.input_filename} {self.addr}'
+    def _script_command(self):
+        return f'{venv_cmd}; python3 experiment.py {self.input_filename} {self.addr} --cloud={self.cloud}'
 
 if __name__ == "__main__":
     import sys
-    dd = DaskDeployer(sys.argv[1], sys.argv[2])
+    from deployment_argparser import deployment_parser
+    args = deployment_parser()
+    dd = DaskDeployer(**args)
     dd()

@@ -16,13 +16,14 @@ manage running multiple experiments and saving results
 '''
 class ExperimentManager:
     
-    def __init__(self, input_filename):
+    def __init__(self, input_filename, store_cloud=True):
         with open(input_filename) as f:
             p = yaml.load(f, Loader=yaml.FullLoader)
             p = {k: [v] if not isinstance(v, list) else v for k, v in p.items()}
             p = list(ParameterGrid(p))
         self.parameters = p
         self.results_file = 'Results/results.json'
+        self.store_cloud = store_cloud
 
     # run all experiments defined in input_filename
     def __call__(self):
@@ -33,6 +34,11 @@ class ExperimentManager:
         return futures
 
     def save_new_results(self, new_res):
+        self.save_new_results_local(new_res)
+        if self.store_cloud:
+            self.save_new_results_cloud(new_res)
+
+    def save_new_results_local(self, new_res):
         if not os.path.exists(self.results_file):
             res = []
         else:
@@ -42,6 +48,8 @@ class ExperimentManager:
         with open(self.results_file, 'w') as fp:
             fp.write(json.dumps(res))
   
+    def save_new_results_cloud(self, new_res):
+        pass
 '''
 manage running a single experiment given parameters
 '''
@@ -96,16 +104,15 @@ if __name__ == "__main__":
     import sys
     import time
     from distributed import Client
-
-    input_filename = sys.argv[1]
-    dask_scheduler_address = sys.argv[2]
+    from deployment_argparser import experiment_parser
+    args = experiment_parser()
     
-    client = Client('tcp://' + dask_scheduler_address)
+    client = Client('tcp://' + args['dask_addr'])
     client.upload_file('hingeloss.py')
     client.upload_file('model.py')
     client.upload_file('data.py')
     client.upload_file('experiment.py')
 
-    future = client.submit(ExperimentManager(input_filename))
+    future = client.submit(ExperimentManager(args['input_filename'], args['cloud']))
     future = client.gather(future)
     print(future)

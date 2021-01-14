@@ -68,7 +68,6 @@ class Data:
         rank_ij = np.sign(dist_j - dist_i)
         return rank_ij
 
-
 '''
 sample data for experiments generated randomly in (N,D) space
 '''
