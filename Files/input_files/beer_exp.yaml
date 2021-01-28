@@ -8,5 +8,5 @@ criterion: ['MSELoss', 'Hinge']
 lr: 0.01
 weight_decay: 1e-5
 optimizer: 'SGD'
-epochs: 1000
+epochs: 250
 clip_grad: [.2, .5, 1]
