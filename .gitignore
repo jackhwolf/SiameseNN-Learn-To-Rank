@@ -2,3 +2,4 @@ __pycache__
 dask-worker-space
 venv
 Results/*
+**/.ipynb_checkpoints
